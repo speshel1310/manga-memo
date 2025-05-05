@@ -275,6 +275,13 @@ class MemoryGame {
     showWinPopup() {
         this.popupOverlay.classList.remove('hidden');
         this.sendMetric('promo_popup_shown');
+        
+        // Новая цель для аналитики - игрок прошел игру и увидел баннер с промокодом
+        this.sendMetric('game_completed_promo_shown', {
+            moves: this.totalMoves,
+            durationMs: this.winTime - this.gameStartTime,
+            promoCode: document.getElementById('promo-code').textContent
+        });
     }
     
     restart() {
@@ -300,7 +307,7 @@ class MemoryGame {
     sendMetric(name, params = {}) {
         if (window.ym && typeof window.ym === 'function') {
             try {
-                window.ym(101462542, 'reachGoal', name, params);
+                window.ym(101620192, 'reachGoal', name, params);
             } catch (e) {
                 console.error(`Ошибка отправки метрики ${name}:`, e);
             }
@@ -315,6 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Определяем мобильное устройство или десктоп
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if (window.ym && typeof window.ym === 'function') {
-        window.ym(101462542, 'reachGoal', isMobile ? 'game_mobile' : 'game_desktop');
+        window.ym(101620192, 'reachGoal', isMobile ? 'game_mobile' : 'game_desktop');
     }
 });
